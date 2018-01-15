@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /*命令参数规则：
-  process.argv[2]:业务参数/方法参数
-  process.argv[3]:url
-  process.argv[4]:文件夹名
+  process.argv[1]:执行脚本
+  process.argv[2]:业务命令
+  process.argv[3]:仓库地址
+  process.argv[4]:子模块文件夹名
+  process.argv[5]:提交文件
 */
 // 在 commit 之前检查是否有冲突，如果有冲突就 process.exit(1)
 const execSync = require('child_process').execSync
