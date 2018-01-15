@@ -94,23 +94,27 @@ function subModuleStatusFun(){
   cd('..')
 }
 function commitSubModuleFun(){
-  // cd(subModule_folderName)
-  // let temp1 = addFiles.split(',').join(' ')
-  // console.log(temp1)
-  // runFun('git add '+ temp1)
-  // temp1 = null
-  // runFun('git commit -m "git commit '+addFiles+'"')
-  // runFun('git push')
-  // cd('..')
-  let temp2 = []
-  addFiles.split(',').map((v,i)=>{
-     temp2.push(subModule_folderName+'/'+v)
-  })
-  console.log(temp2.join(','))
-  // runFun('git add '+ temp2.join(' ') +' --force')
-  // runFun('git add '+ temp2.join(' '))
-  runFun('git add .')
-  runFun('git commit -m "'+subModule_folderName+': git commit '+temp2.join(',')+'"')
+  cd(subModule_folderName)
+  let temp1 = addFiles.split(',').join(' ')
+  console.log(temp1)
+  runFun('git add '+ temp1)
+  temp1 = null
+  runFun('git commit -m "git commit '+addFiles+'"')
+  runFun('git push')
+  cd('..')
+  runFun('git add '+subModule_folderName)
+  runFun('git commit -m "git commit '+subModule_folderName+'"')
+  runFun('git push')
+}
+function mainModuleStatusFun(){
+  console.log(runFun('git status'))
+}
+function commitMainModuleFun(){
+  let temp1 = addFiles.split(',').join(' ')
+  console.log(temp1)
+  runFun('git add '+ temp1)
+  temp1 = null
+  runFun('git commit -m "git commit '+addFiles+'"')
   runFun('git push')
 }
 //修改
@@ -133,6 +137,12 @@ function commitSubModuleFun(){
       break
     case 'commitsubmodule'://例如：npm run git commitsubmodule - subProject909 a.js,b.js
       commitSubModuleFun()
+      break
+    case 'mainmodulestatus'://例如：npm run git mainmodulestatus
+      mainModuleStatusFun()
+      break
+    case 'commitmainmodule'://例如：npm run git commitmainmodule - - src/main.js
+      commitMainModuleFun()
       break
   }
 })()
