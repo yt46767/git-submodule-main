@@ -122,28 +122,28 @@ function commitMainModuleFun(){
 //修改
 (function(){
   switch(runCmd){
-    case 'addsubmodule':    //例如：npm run git addsubmodule https://github.com/yt46767/subProject1.git subProject909
+    case 'addsubmodule':    //例如：h5m addsubmodule https://github.com/yt46767/subProject1.git subProject909
       gitAddSubModuleFun()
       break
-    case 'deletesubmodule': //例如：npm run git deletesubmodule - subProject909
+    case 'deletesubmodule': //例如：h5m deletesubmodule - subProject909
       gitDeleteSubModuleFun()
       break
-    case 'updateallmodule': //例如：npm run git updateallmodule
+    case 'updateallmodule': //例如：h5m updateallmodule
       updateAllModuleFun()
       break
-    case 'updatesubmodule'://例如：npm run git updatesubmodule - subProject909
+    case 'updatesubmodule': //例如：h5m updatesubmodule - subProject909
       updateSubModuleFun()
       break
-    case 'submodulestatus'://例如：npm run git submodulestatus - subProject909
+    case 'submodulestatus': //例如：h5m submodulestatus - subProject909
       subModuleStatusFun()
       break
-    case 'commitsubmodule'://例如：npm run git commitsubmodule - subProject909 a.js,b.js
+    case 'commitsubmodule': //例如：h5m commitsubmodule - subProject909 a.js,b.js
       commitSubModuleFun()
       break
-    case 'mainmodulestatus'://例如：npm run git mainmodulestatus
+    case 'mainmodulestatus'://例如：h5m mainmodulestatus
       mainModuleStatusFun()
       break
-    case 'commitmainmodule'://例如：npm run git commitmainmodule - - src/main.js
+    case 'commitmainmodule'://例如：h5m commitmainmodule - - src/main.js,package.json,bin
       commitMainModuleFun()
       break
   }

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "h5m": "bin/h5m.js"
+  },
   "directories": {
     "doc": "doc"
   },
