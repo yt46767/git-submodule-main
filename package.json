@@ -1,0 +1,20 @@
+{
+  "name": "project_nodegitproject1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "dependencies": {
+    "shelljs": "^0.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "git": "jspath=main node src/index.js",
+    "rm": "rm -rf mainProject"
+  },
+  "author": "",
+  "license": "ISC"
+}
