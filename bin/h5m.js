@@ -129,7 +129,7 @@ function mainStatusFun(){
     case 'addsub':           //例如：h5m addsub temp temp https://github.com/yt46767/subProject2.git subProject9009
       addSubFun()            //已验证通过！
       break
-    case 'delsub':           //例如：h5m delsub temp - - subProject9009
+    case 'delsub':           //例如：h5m delsub temp - - subProject9111
       delSubFun()            //已验证通过！
       break
     case 'pullall':          //例如：h5m pullall temp
