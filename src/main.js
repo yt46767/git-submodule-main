@@ -83,6 +83,8 @@ function gitDeleteSubModuleFun(){
 function updateAllModuleFun(){
   runFun("git submodule foreach git pull origin master")
   runFun('git pull origin master')
+  runFun("git submodule init")
+  runFun("git submodule update --recursive")
 }
 function updateSubModuleFun(){
   cd(subModule_folderName)

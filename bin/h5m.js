@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-/*命令参数规则：
+/*命令行参数定义：
   process.argv[1]:执行脚本
   process.argv[2]:业务命令
   process.argv[3]:仓库地址
   process.argv[4]:子模块文件夹名
   process.argv[5]:提交文件
 */
-// 在 commit 之前检查是否有冲突，如果有冲突就 process.exit(1)
+//在 commit 之前检查是否有冲突，如果有冲突就 process.exit(1)
 const execSync = require('child_process').execSync
 require('shelljs/global')
-// 变量
+//申明变量
 const runCmd = process.argv[2]
 const url = process.argv[3] || "未指向仓库地址"
 const subModule_folderName = process.argv[4] || "未命名文件夹"
@@ -17,11 +17,11 @@ const addFiles = process.argv[5] || "未申明提交文件"
 let clone_url
 const clone_option = "--recursive"
 let subModule_url
-//去空
+//字符串前后去空
 function trim(str){
   return str.replace(/(^\s*)|(\s*$)/g, "");
 }
-//执行业务后，异常捕获
+//命令执行中异常捕获
 function runFun(f){
   // git 对所有冲突的地方都会生成下面这种格式的信息，所以写个检测冲突文件的正则
   const isConflictRegular = "^<<<<<<<\\s|^=======$|^>>>>>>>\\s"
@@ -43,11 +43,7 @@ function runFun(f){
   }
   process.exit(0)
 }
-function gitInitFun(){
-  //git init
-  runFun("git init")
-}
-// 增加新的子模块
+//增加新子模块
 function gitAddSubModuleFun(){
   subModule_url = url || '未命名子仓库地址'
   // git subModule add --name subProject22332 https://github.com/yt46767/subProject2.git mainProject/subProject2
@@ -61,7 +57,7 @@ function gitAddSubModuleFun(){
   // git push
   runFun('git push')
 }
-// 在主模块修改子模块代码，并提交
+//主模块中提交子模块
 function gitDeleteSubModuleFun(){
   console.log(runFun("pwd"))
   runFun("git rm "+subModule_folderName)
@@ -80,21 +76,27 @@ function gitDeleteSubModuleFun(){
   runFun("git commit -a -m 'remove "+subModule_folderName+"'")
   runFun("git push")
 }
+//更新所有模块
 function updateAllModuleFun(){
   runFun("git submodule foreach git pull origin master")
   runFun('git pull origin master')
+  runFun("git submodule init")
+  runFun("git submodule update --recursive")
 }
+//更新子模块
 function updateSubModuleFun(){
   cd(subModule_folderName)
   runFun('git pull origin master')
   cd('..')
   runFun('git pull origin master')
 }
+//查询子模块状态
 function subModuleStatusFun(){
   cd(subModule_folderName)
   console.log(runFun('git status'))
   cd('..')
 }
+//提交子模块
 function commitSubModuleFun(){
   cd(subModule_folderName)
   let temp1 = addFiles.split(',').join(' ')
@@ -108,9 +110,11 @@ function commitSubModuleFun(){
   runFun('git commit -m "git commit '+subModule_folderName+'"')
   runFun('git push')
 }
+//查询主模块状态
 function mainModuleStatusFun(){
   console.log(runFun('git status'))
 }
+//提交主模块
 function commitMainModuleFun(){
   let temp1 = addFiles.split(',').join(' ')
   console.log(temp1)
@@ -119,7 +123,7 @@ function commitMainModuleFun(){
   runFun('git commit -m "git commit '+addFiles+'"')
   runFun('git push')
 }
-//修改
+//业务判断
 (function(){
   switch(runCmd){
     case 'addsubmodule':    //例如：h5m addsubmodule https://github.com/yt46767/subProject1.git subProject909
@@ -143,7 +147,7 @@ function commitMainModuleFun(){
     case 'mainmodulestatus'://例如：h5m mainmodulestatus
       mainModuleStatusFun()
       break
-    case 'commitmainmodule'://例如：h5m commitmainmodule - - src/main.js,package.json,bin
+    case 'commitmainmodule'://例如：h5m commitmainmodule - - bin/h5m.js
       commitMainModuleFun()
       break
   }
