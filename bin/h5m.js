@@ -46,15 +46,11 @@ function runFun(f){
 //增加新子模块
 function gitAddSubModuleFun(){
   subModule_url = url || '未命名子仓库地址'
-  // git subModule add --name subProject22332 https://github.com/yt46767/subProject2.git mainProject/subProject2
   runFun("git submodule add --force --name "+subModule_folderName+" "+subModule_url+" "+ subModule_folderName )
-  // git add .gitmodules subProject1
+  // 主模块提交子模块版本信息
   runFun("git add .gitmodules "+subModule_folderName)
-  // git commit -m "subProject1 submodule"
   runFun('git commit -m "commit '+subModule_folderName+'"')
-  // git submodule init
   runFun('git submodule init')
-  // git push
   runFun('git push')
 }
 //主模块中提交子模块
@@ -78,10 +74,9 @@ function gitDeleteSubModuleFun(){
 }
 //更新所有模块
 function updateAllModuleFun(){
+  runFun("git submodule update --init --recursive")
   runFun("git submodule foreach git pull origin master")
   runFun('git pull origin master')
-  runFun("git submodule init")
-  runFun("git submodule update --recursive")
 }
 //更新子模块
 function updateSubModuleFun(){
