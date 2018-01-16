@@ -126,16 +126,16 @@ function mainStatusFun(){
 //业务判断
 (function(){
   switch(runCmd){
-    case 'addsub':           //例如：h5m addsub temp temp https://github.com/yt46767/subProject2.git subProject9009
+    case 'addsub':           //例如：h5m addsub temp temp https://github.com/yt46767/subProject1.git subProject99
       addSubFun()            //已验证通过！
       break
-    case 'delsub':           //例如：h5m delsub temp - - subProject91119
+    case 'delsub':           //例如：h5m delsub temp - - subProject9
       delSubFun()            //已验证通过！
       break
     case 'pullall':          //例如：h5m pullall temp
       pullAllFun()
       break
-    case 'pullsub':          //例如：h5m pullsub temp temp - subProject91119
+    case 'pullsub':          //例如：h5m pullsub temp temp - subProject9
       pullSubFun()
       break
     case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js,a.js
