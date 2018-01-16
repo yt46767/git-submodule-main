@@ -78,17 +78,17 @@ function delSubFun(){
 //更新所有模块
 function pullAllFun(){
   runFun("git submodule update --init --recursive")
-  runFun("git submodule foreach git pull origin master")
-  runFun('git pull origin master')
+  runFun("git submodule foreach git pull")
+  runFun('git pull origin '+mainBranch)
 }
 //更新子模块
 function pullSubFun(){
   runFun('git submodule init')
   runFun("git submodule update "+subModule_folderName)
   cd(subModule_folderName)
-  runFun('git pull origin master')
-  cd('..')
-  runFun('git pull origin master')
+  runFun('git pull origin '+subBranch)
+  // cd('..')
+  // runFun('git pull origin '+mainBranch)
 }
 //主模块提交代码
 function addCommitPushMainFun(){
@@ -96,7 +96,7 @@ function addCommitPushMainFun(){
   runFun('git add '+ temp1)
   temp1 = null
   runFun('git commit -m "git commit '+addFiles+'"')
-  runFun('git push')
+  runFun('git push origin '+mainBranch)
 }
 //子模块提交 & 主模块提交子模块更新信息
 function addCommitPushSubFun(){
@@ -106,12 +106,12 @@ function addCommitPushSubFun(){
     runFun('git add '+ temp1)
     temp1 = null
     runFun('git commit -m "git commit '+addFiles+'"')
-    runFun('git push')
+    runFun('git push origin '+subBranch)
     cd('..')
   }
   runFun('git add '+subModule_folderName)
   runFun('git commit -m "git commit '+subModule_folderName+'"')
-  runFun('git push')
+  runFun('git push origin '+mainBranch)
 }
 //查询子模块状态
 function subStatusFun(){
@@ -132,16 +132,16 @@ function mainStatusFun(){
     case 'delsub':           //例如：h5m delsub master - - subProject909
       delSubFun()
       break
-    case 'pullall':          //例如：h5m pullall
+    case 'pullall':          //例如：h5m pullall master
       pullAllFun()
       break
-    case 'pullsub':          //例如：h5m pullsub - - - subProject909
+    case 'pullsub':          //例如：h5m pullsub - temp - subProject909
       pullSubFun()
       break
-    case 'addcommitpushmain'://例如：h5m addcommitpushmain - - - - bin/h5m.js
+    case 'addcommitpushmain'://例如：h5m addcommitpushmain master - - - bin/h5m.js
       addCommitPushMainFun()
       break
-    case 'addcommitpushsub': //例如：h5m addcommitpushsub - - - subProject909 a.js,b.js
+    case 'addcommitpushsub': //例如：h5m addcommitpushsub master temp - subProject909 a.js,b.js
       addCommitPushSubFun()
       break
     case 'mainstatus':       //例如：h5m mainstatus
