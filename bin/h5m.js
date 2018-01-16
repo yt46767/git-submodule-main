@@ -60,7 +60,7 @@ function addSubFun(){
 }
 //删除子模块
 function delSubFun(){
-  runFun("git rm "+subModule_folderName)
+  runFun("git rm "+subModule_folderName+" -f")
   cd('.git')
   //删除带subModule_folderName字符串的某一行以及后面1行
   const gitConfig_file ="config"
@@ -77,7 +77,7 @@ function delSubFun(){
 }
 //更新所有模块
 function pullAllFun(){
-  runFun("git submodule update --init --recursive")
+  // runFun("git submodule update --init --recursive")
   runFun("git submodule foreach git pull")
   runFun('git pull origin '+mainBranch)
 }
@@ -87,7 +87,7 @@ function pullSubFun(){
   runFun("git submodule update "+subModule_folderName)
   cd(subModule_folderName)
   runFun('git pull origin '+subBranch)
-  // cd('..')
+  cd('..')
   // runFun('git pull origin '+mainBranch)
 }
 //主模块提交代码
@@ -135,11 +135,11 @@ function mainStatusFun(){
     case 'pullall':          //例如：h5m pullall temp
       pullAllFun()
       break
-    case 'pullsub':          //例如：h5m pullsub temp temp - subProject908
+    case 'pullsub':          //例如：h5m pullsub temp temp - subProject91119
       pullSubFun()
       break
     case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js,a.js
-      addCommitPushMainFun()
+      addCommitPushMainFun() //已验证通过！
       break
     case 'addcommitpushsub': //例如：h5m addcommitpushsub temp temp - subProject9009 a.js,b.js
       addCommitPushSubFun()  //已验证通过！
