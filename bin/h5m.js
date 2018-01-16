@@ -55,10 +55,8 @@ function addSubFun(){
 }
 //删除子模块
 function delSubFun(){
-  console.log(runFun("pwd"))
   runFun("git rm "+subModule_folderName)
   cd('.git')
-  console.log(runFun("pwd"))
   //删除带subModule_folderName字符串的某一行以及后面1行
   const gitConfig_file ="config"
   startLine=`sed -n '/`+subModule_folderName+`/=' `+gitConfig_file //先计算带subModule_folderName字符串行的行号
@@ -82,7 +80,6 @@ function pullAllFun(){
 function pullSubFun(){
   runFun('git submodule init')
   runFun("git submodule update "+subModule_folderName)
-  console.log(1)
   cd(subModule_folderName)
   runFun('git pull origin master')
   cd('..')
@@ -91,7 +88,6 @@ function pullSubFun(){
 //主模块提交代码
 function addCommitPushMainFun(){
   let temp1 = addFiles.split(',').join(' ')
-  console.log(temp1)
   runFun('git add '+ temp1)
   temp1 = null
   runFun('git commit -m "git commit '+addFiles+'"')
@@ -102,7 +98,6 @@ function addCommitPushSubFun(){
   if(addFiles!='未申明提交文件'){
     cd(subModule_folderName)
     let temp1 = addFiles.split(',').join(' ')
-    console.log(temp1)
     runFun('git add '+ temp1)
     temp1 = null
     runFun('git commit -m "git commit '+addFiles+'"')
@@ -126,13 +121,13 @@ function mainStatusFun(){
 //业务判断
 (function(){
   switch(runCmd){
-    case 'addsub':    //例如：h5m addsub https://github.com/yt46767/subProject1.git subProject909
+    case 'addsub':           //例如：h5m addsub https://github.com/yt46767/subProject1.git subProject909
       addSubFun()
       break
-    case 'delsub': //例如：h5m delsub - subProject909
+    case 'delsub':           //例如：h5m delsub - subProject909
       delSubFun()
       break
-    case 'pullall': //例如：h5m pullall
+    case 'pullall':          //例如：h5m pullall
       pullAllFun()
       break
     case 'pullsub':          //例如：h5m pullsub - subProject909
@@ -144,10 +139,10 @@ function mainStatusFun(){
     case 'addcommitpushsub': //例如：h5m addcommitpushsub - subProject909 a.js,b.js
       addCommitPushSubFun()
       break
-    case 'mainstatus'://例如：h5m mainstatus
+    case 'mainstatus':       //例如：h5m mainstatus
       mainStatusFun()
       break
-    case 'substatus': //例如：h5m substatus - subProject909
+    case 'substatus':        //例如：h5m substatus - subProject909
       subStatusFun()
       break
   }
