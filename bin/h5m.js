@@ -1,19 +1,24 @@
 #!/usr/bin/env node
-/*命令行参数定义：
+/*
+  命令行参数定义：
   process.argv[1]:执行脚本
   process.argv[2]:业务命令
-  process.argv[3]:仓库地址
-  process.argv[4]:子模块文件夹名
-  process.argv[5]:提交文件
+  process.argv[3]:主模块分支
+  process.argv[4]:子模块分支
+  process.argv[5]:仓库地址
+  process.argv[6]:子模块文件夹名
+  process.argv[7]:提交文件
 */
 //在 commit 之前检查是否有冲突，如果有冲突就 process.exit(1)
 const execSync = require('child_process').execSync
 require('shelljs/global')
 //申明变量
 const runCmd = process.argv[2]
-const url = process.argv[3] || "未指向仓库地址"
-const subModule_folderName = process.argv[4] || "未命名文件夹"
-const addFiles = process.argv[5] || "未申明提交文件"
+const mainBranch = process.argv[3] || "未定义主模块分支"
+const subBranch = process.argv[4] || "未定义子模块分支"
+const url = process.argv[5] || "未定义仓库地址"
+const subModule_folderName = process.argv[6] || "未命名文件夹"
+const addFiles = process.argv[7] || "未申明提交文件"
 let clone_url
 const clone_option = "--recursive"
 let subModule_url
@@ -46,12 +51,12 @@ function runFun(f){
 //增加新子模块
 function addSubFun(){
   subModule_url = url || '未命名子仓库地址'
-  runFun("git submodule add --force --name "+subModule_folderName+" "+subModule_url+" "+ subModule_folderName )
+  runFun("git submodule add --force --name "+subModule_folderName+" -b "+subBranch+" "+subModule_url+" "+ subModule_folderName )
   // 主模块提交子模块版本信息
   runFun("git add .gitmodules "+subModule_folderName)
   runFun('git commit -m "commit '+subModule_folderName+'"')
   runFun('git submodule init')
-  runFun('git push')
+  runFun('git push origin '+mainBranch)
 }
 //删除子模块
 function delSubFun(){
@@ -121,28 +126,28 @@ function mainStatusFun(){
 //业务判断
 (function(){
   switch(runCmd){
-    case 'addsub':           //例如：h5m addsub https://github.com/yt46767/subProject1.git subProject909
+    case 'addsub':           //例如：h5m addsub master temp https://github.com/yt46767/subProject1.git subProject9111
       addSubFun()
       break
-    case 'delsub':           //例如：h5m delsub - subProject909
+    case 'delsub':           //例如：h5m delsub - - - subProject909
       delSubFun()
       break
     case 'pullall':          //例如：h5m pullall
       pullAllFun()
       break
-    case 'pullsub':          //例如：h5m pullsub - subProject909
+    case 'pullsub':          //例如：h5m pullsub - - - subProject909
       pullSubFun()
       break
-    case 'addcommitpushmain'://例如：h5m addcommitpushmain - - bin/h5m.js
+    case 'addcommitpushmain'://例如：h5m addcommitpushmain - - - - bin/h5m.js
       addCommitPushMainFun()
       break
-    case 'addcommitpushsub': //例如：h5m addcommitpushsub - subProject909 a.js,b.js
+    case 'addcommitpushsub': //例如：h5m addcommitpushsub - - - subProject909 a.js,b.js
       addCommitPushSubFun()
       break
     case 'mainstatus':       //例如：h5m mainstatus
       mainStatusFun()
       break
-    case 'substatus':        //例如：h5m substatus - subProject909
+    case 'substatus':        //例如：h5m substatus - - - subProject909
       subStatusFun()
       break
   }
