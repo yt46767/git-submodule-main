@@ -44,7 +44,7 @@ function runFun(f){
   process.exit(0)
 }
 //增加新子模块
-function gitAddSubModuleFun(){
+function addSubFun(){
   subModule_url = url || '未命名子仓库地址'
   runFun("git submodule add --force --name "+subModule_folderName+" "+subModule_url+" "+ subModule_folderName )
   // 主模块提交子模块版本信息
@@ -53,8 +53,8 @@ function gitAddSubModuleFun(){
   runFun('git submodule init')
   runFun('git push')
 }
-//主模块中提交子模块
-function gitDeleteSubModuleFun(){
+//删除子模块
+function delSubFun(){
   console.log(runFun("pwd"))
   runFun("git rm "+subModule_folderName)
   cd('.git')
@@ -73,77 +73,82 @@ function gitDeleteSubModuleFun(){
   runFun("git push")
 }
 //更新所有模块
-function updateAllModuleFun(){
+function pullAllFun(){
   runFun("git submodule update --init --recursive")
   runFun("git submodule foreach git pull origin master")
   runFun('git pull origin master')
 }
 //更新子模块
-function updateSubModuleFun(){
+function pullSubFun(){
+  runFun('git submodule init')
+  runFun("git submodule update "+subModule_folderName)
+  console.log(1)
   cd(subModule_folderName)
   runFun('git pull origin master')
   cd('..')
   runFun('git pull origin master')
 }
-//查询子模块状态
-function subModuleStatusFun(){
-  cd(subModule_folderName)
-  console.log(runFun('git status'))
-  cd('..')
-}
-//提交子模块
-function commitSubModuleFun(){
-  cd(subModule_folderName)
+//主模块提交代码
+function addCommitPushMainFun(){
   let temp1 = addFiles.split(',').join(' ')
   console.log(temp1)
   runFun('git add '+ temp1)
   temp1 = null
   runFun('git commit -m "git commit '+addFiles+'"')
   runFun('git push')
-  cd('..')
+}
+//子模块提交 & 主模块提交子模块更新信息
+function addCommitPushSubFun(){
+  if(addFiles!='未申明提交文件'){
+    cd(subModule_folderName)
+    let temp1 = addFiles.split(',').join(' ')
+    console.log(temp1)
+    runFun('git add '+ temp1)
+    temp1 = null
+    runFun('git commit -m "git commit '+addFiles+'"')
+    runFun('git push')
+    cd('..')
+  }
   runFun('git add '+subModule_folderName)
   runFun('git commit -m "git commit '+subModule_folderName+'"')
   runFun('git push')
 }
-//查询主模块状态
-function mainModuleStatusFun(){
+//查询子模块状态
+function subStatusFun(){
+  cd(subModule_folderName)
   console.log(runFun('git status'))
+  cd('..')
 }
-//提交主模块
-function commitMainModuleFun(){
-  let temp1 = addFiles.split(',').join(' ')
-  console.log(temp1)
-  runFun('git add '+ temp1)
-  temp1 = null
-  runFun('git commit -m "git commit '+addFiles+'"')
-  runFun('git push')
+//查询主模块状态
+function mainStatusFun(){
+  console.log(runFun('git status'))
 }
 //业务判断
 (function(){
   switch(runCmd){
-    case 'addsubmodule':    //例如：h5m addsubmodule https://github.com/yt46767/subProject1.git subProject909
-      gitAddSubModuleFun()
+    case 'addsub':    //例如：h5m addsub https://github.com/yt46767/subProject1.git subProject909
+      addSubFun()
       break
-    case 'deletesubmodule': //例如：h5m deletesubmodule - subProject909
-      gitDeleteSubModuleFun()
+    case 'delsub': //例如：h5m delsub - subProject909
+      delSubFun()
       break
-    case 'updateallmodule': //例如：h5m updateallmodule
-      updateAllModuleFun()
+    case 'pullall': //例如：h5m pullall
+      pullAllFun()
       break
-    case 'updatesubmodule': //例如：h5m updatesubmodule - subProject909
-      updateSubModuleFun()
+    case 'pullsub':          //例如：h5m pullsub - subProject909
+      pullSubFun()
       break
-    case 'submodulestatus': //例如：h5m submodulestatus - subProject909
-      subModuleStatusFun()
+    case 'addcommitpushmain'://例如：h5m addcommitpushmain - - bin/h5m.js
+      addCommitPushMainFun()
       break
-    case 'commitsubmodule': //例如：h5m commitsubmodule - subProject909 a.js,b.js
-      commitSubModuleFun()
+    case 'addcommitpushsub': //例如：h5m addcommitpushsub - subProject909 a.js,b.js
+      addCommitPushSubFun()
       break
-    case 'mainmodulestatus'://例如：h5m mainmodulestatus
-      mainModuleStatusFun()
+    case 'mainstatus'://例如：h5m mainstatus
+      mainStatusFun()
       break
-    case 'commitmainmodule'://例如：h5m commitmainmodule - - bin/h5m.js
-      commitMainModuleFun()
+    case 'substatus': //例如：h5m substatus - subProject909
+      subStatusFun()
       break
   }
 })()
