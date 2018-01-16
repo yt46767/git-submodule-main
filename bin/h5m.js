@@ -127,10 +127,10 @@ function mainStatusFun(){
 (function(){
   switch(runCmd){
     case 'addsub':           //例如：h5m addsub temp temp https://github.com/yt46767/subProject2.git subProject9009
-      addSubFun()
+      addSubFun()            //已验证通过！
       break
     case 'delsub':           //例如：h5m delsub temp - - subProject9009
-      delSubFun()
+      delSubFun()            //已验证通过！
       break
     case 'pullall':          //例如：h5m pullall temp
       pullAllFun()
@@ -138,17 +138,17 @@ function mainStatusFun(){
     case 'pullsub':          //例如：h5m pullsub temp temp - subProject908
       pullSubFun()
       break
-    case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js
+    case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js,a.js
       addCommitPushMainFun()
       break
     case 'addcommitpushsub': //例如：h5m addcommitpushsub temp temp - subProject9009 a.js,b.js
-      addCommitPushSubFun()
+      addCommitPushSubFun()  //已验证通过！
       break
     case 'mainstatus':       //例如：h5m mainstatus
-      mainStatusFun()
+      mainStatusFun()        //已验证通过！
       break
     case 'substatus':        //例如：h5m substatus - - - subProject9009
-      subStatusFun()
+      subStatusFun()         //已验证通过！
       break
   }
 })()
