@@ -73,7 +73,7 @@ function delSubFun(){
   //提交代码
   runFun("git add .")
   runFun("git commit -a -m 'remove "+subModule_folderName+"'")
-  runFun("git push")
+  runFun("git push origin "+mainBranch)
 }
 //更新所有模块
 function pullAllFun(){
@@ -129,7 +129,7 @@ function mainStatusFun(){
     case 'addsub':           //例如：h5m addsub master temp https://github.com/yt46767/subProject1.git subProject9111
       addSubFun()
       break
-    case 'delsub':           //例如：h5m delsub - - - subProject909
+    case 'delsub':           //例如：h5m delsub master - - subProject909
       delSubFun()
       break
     case 'pullall':          //例如：h5m pullall
