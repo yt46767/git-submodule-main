@@ -135,7 +135,7 @@ function mainStatusFun(){
     case 'pullall':          //例如：h5m pullall temp
       pullAllFun()
       break
-    case 'pullsub':          //例如：h5m pullsub temp temp - subProject909
+    case 'pullsub':          //例如：h5m pullsub temp temp - subProject908
       pullSubFun()
       break
     case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js
