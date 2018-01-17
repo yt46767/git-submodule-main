@@ -120,11 +120,28 @@ function pullSubFun(){
 }
 //主模块提交代码
 function addCommitPushMainFun(){
-  let temp = addFiles.split(',').join(' ')
-  runFun('git add '+ temp)
-  temp = null
-  runFun('git commit -m "git commit '+addFiles+'"')
-  runFun('git push origin '+mainBranch)
+  if(addFiles!='未申明提交文件'){
+    let temp = addFiles.split(',').join(' ')
+    runFun('git add '+ temp)
+    temp = null
+    runFun('git commit -m "git commit '+addFiles+'"')
+    runFun('git push origin '+mainBranch)
+  }else{
+    console.error('报错：请 git add 具体文件')
+  }
+}
+//主模块删除代码
+function rmCommitPushMainFun(){
+  if(addFiles!='未申明提交文件' && addFiles != '.'){
+    runFun('git pull origin '+mainBranch)
+    let temp = addFiles.split('s,').join(' ')
+    runFun('git rm '+ temp)
+    temp = null
+    runFun('git commit -m "git commit '+addFiles+'"')
+    runFun('git push origin '+mainBranch)
+  }else{
+    console.error('报错：请 git rm 具体文件')
+  }
 }
 //子模块提交 & 主模块提交子模块更新信息
 function addCommitPushSubFun(){
@@ -139,10 +156,12 @@ function addCommitPushSubFun(){
     runFun('git push origin '+subBranch)
     cd(temp1)
     temp1 = null
+    runFun('git add '+subModule_folderName)
+    runFun('git commit -m "git commit '+subModule_folderName+'"')
+    runFun('git push origin '+mainBranch)
+  }else{
+    console.error('报错：请 git add 具体文件')
   }
-  runFun('git add '+subModule_folderName)
-  runFun('git commit -m "git commit '+subModule_folderName+'"')
-  runFun('git push origin '+mainBranch)
 }
 //子模块提交 & 主模块提交子模块更新信息
 function rmCommitPushSubFun(){
@@ -150,7 +169,7 @@ function rmCommitPushSubFun(){
     let temp1 = trim(runFun('pwd'))
     cd(subModule_folderName)
     runFun('git pull origin '+subBranch)
-    let temp = addFiles.split(',').join(' ')
+    let temp = addFiles.split('s,').join(' ')
     runFun('git rm '+ temp)
     temp = null
     runFun('git commit -m "git commit '+addFiles+'"')
@@ -161,7 +180,7 @@ function rmCommitPushSubFun(){
     runFun('git commit -m "git commit '+subModule_folderName+'"')
     runFun('git push origin '+mainBranch)
   }else{
-    console.error('报错：请git rm 具体文件')
+    console.error('报错：请 git rm 具体文件')
   }
 }
 //查询子模块状态
@@ -193,6 +212,9 @@ function mainStatusFun(){
       break
     case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js
       addCommitPushMainFun() //已验证通过！
+      break
+    case 'rmcommitpushmain': //例如：h5m rmcommitpushmain temp - - - bin/h5m.js
+      rmCommitPushMainFun()  //已验证通过！
       break
     case 'addcommitpushsub': //例如：h5m addcommitpushsub temp temp - subProject99
       addCommitPushSubFun()  //已验证通过！
