@@ -67,7 +67,7 @@ function addSubFun(){
 function delSubFun(){
   let temp = JSON.parse(trim(runFun('cat submodule.json')))
   delete temp[subModule_folderName]
-  runFun('echo "'+temp+'" > submodule.json ')
+  runFun("echo '"+JSON.stringify(temp)+"' > submodule.json ")
   temp = null
 
   runFun("git rm "+subModule_folderName+" -f")
