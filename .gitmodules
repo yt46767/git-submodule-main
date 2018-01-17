@@ -2,7 +2,3 @@
 	path = subProject99
 	url = https://github.com/yt46767/subProject1.git
 	branch = temp
-[submodule "subProject999"]
-	path = subProject999
-	url = https://github.com/yt46767/subProject1.git
-	branch = temp
