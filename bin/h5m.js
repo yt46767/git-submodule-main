@@ -12,14 +12,15 @@
 //在 commit 之前检查是否有冲突，如果有冲突就 process.exit(1)
 const execSync = require('child_process').execSync
 require('shelljs/global')
-//申明变量
-const runCmd = process.argv[2]
-const mainBranch = process.argv[3] || "未定义主模块分支"
-const subBranch = process.argv[4] || "未定义子模块分支"
-const url = process.argv[5] || "未定义仓库地址"
-const subModule_folderName = process.argv[6] || "未命名文件夹"
-const addFiles = process.argv[7] || "未申明提交文件"
-let subModule_url
+//申明变量(单例模式，节省内存)
+const args = {
+  runCmd : process.argv[2] || "未定义业务命令",
+  mainBranch : process.argv[3] || "未定义主模块分支",
+  subBranch : process.argv[4] || "未定义子模块分支",
+  url : process.argv[5] || "未定义仓库地址",
+  subModule_folderName : process.argv[6] || "未定义子模块名",
+  addFiles : process.argv[7] || "未定义提交文件"
+}
 //字符串前后去空
 function trim(str){
   return str.replace(/(^\s*)|(\s*$)/g, "");
@@ -30,7 +31,7 @@ function runFun(f){
   const isConflictRegular = "^<<<<<<<\\s|^=======$|^>>>>>>>\\s"
   let rs = execSync(f, {encoding: 'utf-8'})
   let results
-  let msg = arguments[1] || '没有发现冲突!'
+  // let msg = arguments[1] || '没有发现冲突!'
   try {
       // git grep 命令会执行 perl 的正则匹配所有满足冲突条件的文件
       results = execSync(`git grep -n -P "${isConflictRegular}"`, {encoding: 'utf-8'})
@@ -48,35 +49,35 @@ function runFun(f){
 }
 //增加新子模块
 function addSubFun(){
-  subModule_url = url || '未命名子仓库地址'
+  let subModule_url = args.url || '未命名子仓库地址'
   let temp = JSON.parse(trim(runFun('cat submodule.json')))
-  temp[subModule_folderName] = {}
-  temp[subModule_folderName].url = subModule_url
-  temp[subModule_folderName].branch = subBranch
+  temp[args.subModule_folderName] = {}
+  temp[args.subModule_folderName].url = subModule_url
+  temp[args.subModule_folderName].branch = args.subBranch
   runFun("echo '"+JSON.stringify(temp)+"' > submodule.json ")
   temp = null
 
-  runFun("git submodule add --force --name "+subModule_folderName+" -b "+subBranch+" "+subModule_url+" "+ subModule_folderName )
+  runFun("git submodule add --force --name "+args.subModule_folderName+" -b "+args.subBranch+" "+subModule_url+" "+ args.subModule_folderName )
   // 主模块提交子模块版本信息
-  runFun("git add .gitmodules "+subModule_folderName)
-  runFun('git commit -m "commit '+subModule_folderName+'"')
+  runFun("git add .gitmodules "+args.subModule_folderName)
+  runFun('git commit -m "commit '+args.subModule_folderName+'"')
   runFun('git submodule init')
-  runFun('git push origin '+mainBranch)
+  runFun('git push origin '+args.mainBranch)
 }
 //删除子模块
 function delSubFun(){
   let temp = JSON.parse(trim(runFun('cat submodule.json')))
   let temp1 = trim(runFun('pwd'))
-  delete temp[subModule_folderName]
+  delete temp[args.subModule_folderName]
   runFun("echo '"+JSON.stringify(temp)+"' > submodule.json ")
   temp = null
 
-  runFun("git rm "+subModule_folderName+" -f")
+  runFun("git rm "+args.subModule_folderName+" -f")
   cd('.git')
-  //删除带subModule_folderName字符串的某一行以及后面1行
+  //删除带args.subModule_folderName字符串的某一行以及后面1行
   const gitConfig_file ="config"
-  let temp2 = subModule_folderName.replace(/\//g,'\\/')
-  startLine=`sed -n '/`+temp2+`/=' `+gitConfig_file //先计算带subModule_folderName字符串行的行号
+  let temp2 = args.subModule_folderName.replace(/\//g,'\\/')
+  startLine=`sed -n '/`+temp2+`/=' `+gitConfig_file //先计算带args.subModule_folderName字符串行的行号
   startLine = parseInt(runFun(startLine))
   lineAfter = 1
   let endLine = startLine + lineAfter
@@ -85,8 +86,8 @@ function delSubFun(){
   temp1 = null
   //提交代码
   // runFun("git add .")
-  runFun("git commit -a -m 'remove "+subModule_folderName+"'")
-  runFun("git push origin "+mainBranch)
+  runFun("git commit -a -m 'remove "+args.subModule_folderName+"'")
+  runFun("git push origin "+args.mainBranch)
 }
 //更新所有模块
 function pullAllFun(){
@@ -102,83 +103,83 @@ function pullAllFun(){
   }
   temp = null
   temp1 = null
-  runFun('git pull origin '+mainBranch)
+  runFun('git pull origin '+args.mainBranch)
 }
 //更新子模块
 function pullSubFun(){
   let temp1 = trim(runFun('pwd'))
   runFun('git submodule init')
-  runFun("git submodule update "+subModule_folderName)
-  console.log("git submodule update "+subModule_folderName)
-  cd(subModule_folderName)
-  console.log('cd '+subModule_folderName)
-  runFun('git pull origin '+subBranch)
-  console.log('git pull origin '+subBranch)
+  runFun("git submodule update "+args.subModule_folderName)
+  console.log("git submodule update "+args.subModule_folderName)
+  cd(args.subModule_folderName)
+  console.log('cd '+args.subModule_folderName)
+  runFun('git pull origin '+args.subBranch)
+  console.log('git pull origin '+args.subBranch)
   cd(temp1)
   temp1 = null
-  // runFun('git pull origin '+mainBranch)
+  // runFun('git pull origin '+args.mainBranch)
 }
 //主模块提交代码
 function addCommitPushMainFun(){
-  if(addFiles!='未申明提交文件'){
-    let temp = addFiles.split(',').join(' ')
+  if(args.addFiles!='未申明提交文件'){
+    let temp = args.addFiles.split(',').join(' ')
     runFun('git add '+ temp)
     temp = null
-    runFun('git commit -m "git commit '+addFiles+'"')
-    runFun('git push origin '+mainBranch)
+    runFun('git commit -m "git commit '+args.addFiles+'"')
+    runFun('git push origin '+args.mainBranch)
   }else{
     console.error('报错：请 git add 具体文件')
   }
 }
 //主模块删除代码
 function rmCommitPushMainFun(){
-  if(addFiles!='未申明提交文件' && addFiles != '.'){
-    runFun('git pull origin '+mainBranch)
-    let temp = addFiles.split('s,').join(' ')
+  if(args.addFiles!='未申明提交文件' && args.addFiles != '.'){
+    runFun('git pull origin '+args.mainBranch)
+    let temp = args.addFiles.split('s,').join(' ')
     runFun('git rm '+ temp)
     temp = null
-    runFun('git commit -m "git commit '+addFiles+'"')
-    runFun('git push origin '+mainBranch)
+    runFun('git commit -m "git commit '+args.addFiles+'"')
+    runFun('git push origin '+args.mainBranch)
   }else{
     console.error('报错：请 git rm 具体文件')
   }
 }
 //子模块提交 & 主模块提交子模块更新信息
 function addCommitPushSubFun(){
-  if(addFiles!='未申明提交文件'){
+  if(args.addFiles!='未申明提交文件'){
     let temp1 = trim(runFun('pwd'))
-    cd(subModule_folderName)
-    runFun('git pull origin '+subBranch)
-    let temp = addFiles.split(',').join(' ')
+    cd(args.subModule_folderName)
+    runFun('git pull origin '+args.subBranch)
+    let temp = args.addFiles.split(',').join(' ')
     runFun('git add '+ temp)
     temp = null
-    runFun('git commit -m "git commit '+addFiles+'"')
-    runFun('git push origin '+subBranch)
+    runFun('git commit -m "git commit '+args.addFiles+'"')
+    runFun('git push origin '+args.subBranch)
     cd(temp1)
     temp1 = null
-    runFun('git add '+subModule_folderName)
-    runFun('git commit -m "git commit '+subModule_folderName+'"')
-    runFun('git push origin '+mainBranch)
+    runFun('git add '+args.subModule_folderName)
+    runFun('git commit -m "git commit '+args.subModule_folderName+'"')
+    runFun('git push origin '+args.mainBranch)
   }else{
     console.error('报错：请 git add 具体文件')
   }
 }
 //子模块提交 & 主模块提交子模块更新信息
 function rmCommitPushSubFun(){
-  if(addFiles != '未申明提交文件' && addFiles != '.'){
+  if(args.addFiles != '未申明提交文件' && args.addFiles != '.'){
     let temp1 = trim(runFun('pwd'))
-    cd(subModule_folderName)
-    runFun('git pull origin '+subBranch)
-    let temp = addFiles.split('s,').join(' ')
+    cd(args.subModule_folderName)
+    runFun('git pull origin '+args.subBranch)
+    let temp = args.addFiles.split('s,').join(' ')
     runFun('git rm '+ temp)
     temp = null
-    runFun('git commit -m "git commit '+addFiles+'"')
-    runFun('git push origin '+subBranch)
+    runFun('git commit -m "git commit '+args.addFiles+'"')
+    runFun('git push origin '+args.subBranch)
     cd(temp1)
     temp1 = null
-    runFun('git add '+subModule_folderName)
-    runFun('git commit -m "git commit '+subModule_folderName+'"')
-    runFun('git push origin '+mainBranch)
+    runFun('git add '+args.subModule_folderName)
+    runFun('git commit -m "git commit '+args.subModule_folderName+'"')
+    runFun('git push origin '+args.mainBranch)
   }else{
     console.error('报错：请 git rm 具体文件')
   }
@@ -186,7 +187,7 @@ function rmCommitPushSubFun(){
 //查询子模块状态
 function subStatusFun(){
   let temp1 = trim(runFun('pwd'))
-  cd(subModule_folderName)
+  cd(args.subModule_folderName)
   console.log(runFun('git status'))
   cd(temp1)
   temp1 = null
@@ -197,7 +198,7 @@ function mainStatusFun(){
 }
 //业务判断
 (function(){
-  switch(runCmd){
+  switch(args.runCmd){
     case 'addsub':           //例如：h5m addsub temp temp https://github.com/yt46767/subProject1.git subProject99
       addSubFun()            //已验证通过！
       break
