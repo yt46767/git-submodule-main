@@ -87,8 +87,19 @@ function delSubFun(){
 }
 //更新所有模块
 function pullAllFun(){
-  // runFun("git submodule update --init --recursive")
-  runFun("git submodule foreach git pull")
+  let temp = JSON.parse(trim(runFun('cat submodule.json')))
+  let temp1 = trim(runFun('pwd'))
+  console.log(temp1)
+  for(var o in temp){
+    runFun('git submodule init')
+    runFun("git submodule update "+o.split('/')[o.split('/').length-1])
+    cd(o)
+    console.log(o)
+    runFun('git pull origin '+temp[o].branch)
+    cd(temp1)
+  }
+  temp = null
+  temp1 = null
   runFun('git pull origin '+mainBranch)
 }
 //更新子模块
@@ -143,12 +154,12 @@ function mainStatusFun(){
       delSubFun()            //已验证通过！
       break
     case 'pullall':          //例如：h5m pullall temp
-      pullAllFun()
+      pullAllFun()           //已验证通过！
       break
     case 'pullsub':          //例如：h5m pullsub temp temp - subProject9
-      pullSubFun()
+      pullSubFun()           //已验证通过！
       break
-    case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js,a.js
+    case 'addcommitpushmain'://例如：h5m addcommitpushmain temp - - - bin/h5m.js
       addCommitPushMainFun() //已验证通过！
       break
     case 'addcommitpushsub': //例如：h5m addcommitpushsub temp temp - subProject9009 a.js,b.js
