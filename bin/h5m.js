@@ -19,8 +19,6 @@ const subBranch = process.argv[4] || "未定义子模块分支"
 const url = process.argv[5] || "未定义仓库地址"
 const subModule_folderName = process.argv[6] || "未命名文件夹"
 const addFiles = process.argv[7] || "未申明提交文件"
-let clone_url
-const clone_option = "--recursive"
 let subModule_url
 //字符串前后去空
 function trim(str){
@@ -51,6 +49,13 @@ function runFun(f){
 //增加新子模块
 function addSubFun(){
   subModule_url = url || '未命名子仓库地址'
+  let temp = JSON.parse(trim(runFun('cat submodule.json')))
+  temp[subModule_folderName] = {}
+  temp[subModule_folderName].url = subModule_url
+  temp[subModule_folderName].branch = subBranch
+  runFun('echo "'+temp+'" > submodule.json ')
+  temp = null
+
   runFun("git submodule add --force --name "+subModule_folderName+" -b "+subBranch+" "+subModule_url+" "+ subModule_folderName )
   // 主模块提交子模块版本信息
   runFun("git add .gitmodules "+subModule_folderName)
@@ -60,6 +65,11 @@ function addSubFun(){
 }
 //删除子模块
 function delSubFun(){
+  let temp = JSON.parse(trim(runFun('cat submodule.json')))
+  delete temp[subModule_folderName]
+  runFun('echo "'+temp+'" > submodule.json ')
+  temp = null
+
   runFun("git rm "+subModule_folderName+" -f")
   cd('.git')
   //删除带subModule_folderName字符串的某一行以及后面1行
@@ -92,9 +102,9 @@ function pullSubFun(){
 }
 //主模块提交代码
 function addCommitPushMainFun(){
-  let temp1 = addFiles.split(',').join(' ')
-  runFun('git add '+ temp1)
-  temp1 = null
+  let temp = addFiles.split(',').join(' ')
+  runFun('git add '+ temp)
+  temp = null
   runFun('git commit -m "git commit '+addFiles+'"')
   runFun('git push origin '+mainBranch)
 }
@@ -102,9 +112,9 @@ function addCommitPushMainFun(){
 function addCommitPushSubFun(){
   if(addFiles!='未申明提交文件'){
     cd(subModule_folderName)
-    let temp1 = addFiles.split(',').join(' ')
-    runFun('git add '+ temp1)
-    temp1 = null
+    let temp = addFiles.split(',').join(' ')
+    runFun('git add '+ temp)
+    temp = null
     runFun('git commit -m "git commit '+addFiles+'"')
     runFun('git push origin '+subBranch)
     cd('..')
