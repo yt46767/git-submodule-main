@@ -89,12 +89,10 @@ function delSubFun(){
 function pullAllFun(){
   let temp = JSON.parse(trim(runFun('cat submodule.json')))
   let temp1 = trim(runFun('pwd'))
-  console.log(temp1)
   for(var o in temp){
     runFun('git submodule init')
     runFun("git submodule update "+o.split('/')[o.split('/').length-1])
     cd(o)
-    console.log(o)
     runFun('git pull origin '+temp[o].branch)
     cd(temp1)
   }
