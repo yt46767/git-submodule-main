@@ -71,7 +71,7 @@ function delSubFun(){
   runFun("echo '"+JSON.stringify(temp)+"' > submodule.json ")
   temp = null
 
-  // runFun("git rm "+subModule_folderName+" -f")
+  runFun("git rm "+subModule_folderName+" -f")
   cd('.git')
   //删除带subModule_folderName字符串的某一行以及后面1行
   const gitConfig_file ="config"
