@@ -10,3 +10,7 @@
 	path = src/js/subProject999
 	url = https://github.com/yt46767/subProject1.git
 	branch = temp
+[submodule "src/css/business/subProject9"]
+	path = src/css/business/subProject9
+	url = https://github.com/yt46767/subProject1.git
+	branch = temp
