@@ -53,7 +53,7 @@ function addSubFun(){
   temp[subModule_folderName] = {}
   temp[subModule_folderName].url = subModule_url
   temp[subModule_folderName].branch = subBranch
-  runFun('echo "'+temp+'" > submodule.json ')
+  runFun("echo '"+JSON.stringify(temp)+"' > submodule.json ")
   temp = null
 
   runFun("git submodule add --force --name "+subModule_folderName+" -b "+subBranch+" "+subModule_url+" "+ subModule_folderName )
