@@ -17,7 +17,7 @@ const args = {
   runCmd : process.argv[2] || "未定义业务命令",
   mainBranch : process.argv[3] || "未定义主模块分支",
   subBranch : process.argv[4] || "未定义子模块分支",
-  url : process.argv[5] || "未定义仓库地址",
+  url : process.argv[5],
   subModule_folderName : process.argv[6] || "未定义子模块名",
   addFiles : process.argv[7] || "未定义提交文件"
 }
@@ -49,7 +49,7 @@ function runFun(f){
 }
 //增加新子模块
 function addSubFun(){
-  let subModule_url = args.url || '未命名子仓库地址'
+  let subModule_url = args.url || '未定义子仓库地址'
   let temp = JSON.parse(trim(runFun('cat submodule.json')))
   temp[args.subModule_folderName] = {}
   temp[args.subModule_folderName].url = subModule_url
@@ -121,7 +121,7 @@ function pullSubFun(){
 }
 //主模块提交代码
 function addCommitPushMainFun(){
-  if(args.addFiles!='未申明提交文件'){
+  if(args.addFiles!='未定义提交文件'){
     let temp = args.addFiles.split(',').join(' ')
     runFun('git add '+ temp)
     temp = null
@@ -133,7 +133,7 @@ function addCommitPushMainFun(){
 }
 //主模块删除代码
 function rmCommitPushMainFun(){
-  if(args.addFiles!='未申明提交文件' && args.addFiles != '.'){
+  if(args.addFiles!='未定义提交文件' && args.addFiles != '.'){
     runFun('git pull origin '+args.mainBranch)
     let temp = args.addFiles.split('s,').join(' ')
     runFun('git rm '+ temp)
@@ -146,7 +146,7 @@ function rmCommitPushMainFun(){
 }
 //子模块提交 & 主模块提交子模块更新信息
 function addCommitPushSubFun(){
-  if(args.addFiles!='未申明提交文件'){
+  if(args.addFiles!='未定义提交文件'){
     let temp1 = trim(runFun('pwd'))
     cd(args.subModule_folderName)
     runFun('git pull origin '+args.subBranch)
@@ -165,7 +165,7 @@ function addCommitPushSubFun(){
 }
 //子模块提交 & 主模块提交子模块更新信息
 function rmCommitPushSubFun(){
-  if(args.addFiles != '未申明提交文件' && args.addFiles != '.'){
+  if(args.addFiles != '未定义提交文件' && args.addFiles != '.'){
     let temp1 = trim(runFun('pwd'))
     cd(args.subModule_folderName)
     runFun('git pull origin '+args.subBranch)
