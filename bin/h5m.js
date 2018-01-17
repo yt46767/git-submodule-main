@@ -94,7 +94,8 @@ function pullAllFun(){
   let temp1 = trim(runFun('pwd'))
   for(var o in temp){
     runFun('git submodule init')
-    runFun("git submodule update "+o.split('/')[o.split('/').length-1])
+    // runFun("git submodule update "+o.split('/')[o.split('/').length-1])
+    runFun("git submodule update "+o)
     cd(o)
     runFun('git pull origin '+temp[o].branch)
     cd(temp1)
