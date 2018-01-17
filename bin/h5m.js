@@ -66,22 +66,25 @@ function addSubFun(){
 //删除子模块
 function delSubFun(){
   let temp = JSON.parse(trim(runFun('cat submodule.json')))
+  let temp1 = trim(runFun('pwd'))
   delete temp[subModule_folderName]
   runFun("echo '"+JSON.stringify(temp)+"' > submodule.json ")
   temp = null
 
-  runFun("git rm "+subModule_folderName+" -f")
+  // runFun("git rm "+subModule_folderName+" -f")
   cd('.git')
   //删除带subModule_folderName字符串的某一行以及后面1行
   const gitConfig_file ="config"
-  startLine=`sed -n '/`+subModule_folderName+`/=' `+gitConfig_file //先计算带subModule_folderName字符串行的行号
+  let temp2 = subModule_folderName.replace(/\//g,'\\/')
+  startLine=`sed -n '/`+temp2+`/=' `+gitConfig_file //先计算带subModule_folderName字符串行的行号
   startLine = parseInt(runFun(startLine))
   lineAfter = 1
   let endLine = startLine + lineAfter
   runFun("sed -i '' '"+startLine+","+endLine+"d' "+gitConfig_file,'在.git/config文件里，submodule相关配置已删除')
-  cd('..')
+  cd(temp1)
+  temp1 = null
   //提交代码
-  runFun("git add .")
+  // runFun("git add .")
   runFun("git commit -a -m 'remove "+subModule_folderName+"'")
   runFun("git push origin "+mainBranch)
 }
@@ -102,6 +105,7 @@ function pullAllFun(){
 }
 //更新子模块
 function pullSubFun(){
+  let temp1 = trim(runFun('pwd'))
   runFun('git submodule init')
   runFun("git submodule update "+subModule_folderName)
   console.log("git submodule update "+subModule_folderName)
@@ -109,7 +113,8 @@ function pullSubFun(){
   console.log('cd '+subModule_folderName)
   runFun('git pull origin '+subBranch)
   console.log('git pull origin '+subBranch)
-  cd('..')
+  cd(temp1)
+  temp1 = null
   // runFun('git pull origin '+mainBranch)
 }
 //主模块提交代码
@@ -123,6 +128,7 @@ function addCommitPushMainFun(){
 //子模块提交 & 主模块提交子模块更新信息
 function addCommitPushSubFun(){
   if(addFiles!='未申明提交文件'){
+    let temp1 = trim(runFun('pwd'))
     cd(subModule_folderName)
     runFun('git pull origin '+subBranch)
     let temp = addFiles.split(',').join(' ')
@@ -130,7 +136,8 @@ function addCommitPushSubFun(){
     temp = null
     runFun('git commit -m "git commit '+addFiles+'"')
     runFun('git push origin '+subBranch)
-    cd('..')
+    cd(temp1)
+    temp1 = null
   }
   runFun('git add '+subModule_folderName)
   runFun('git commit -m "git commit '+subModule_folderName+'"')
@@ -139,6 +146,7 @@ function addCommitPushSubFun(){
 //子模块提交 & 主模块提交子模块更新信息
 function rmCommitPushSubFun(){
   if(addFiles != '未申明提交文件' && addFiles != '.'){
+    let temp1 = trim(runFun('pwd'))
     cd(subModule_folderName)
     runFun('git pull origin '+subBranch)
     let temp = addFiles.split(',').join(' ')
@@ -146,7 +154,8 @@ function rmCommitPushSubFun(){
     temp = null
     runFun('git commit -m "git commit '+addFiles+'"')
     runFun('git push origin '+subBranch)
-    cd('..')
+    cd(temp1)
+    temp1 = null
     runFun('git add '+subModule_folderName)
     runFun('git commit -m "git commit '+subModule_folderName+'"')
     runFun('git push origin '+mainBranch)
@@ -156,9 +165,11 @@ function rmCommitPushSubFun(){
 }
 //查询子模块状态
 function subStatusFun(){
+  let temp1 = trim(runFun('pwd'))
   cd(subModule_folderName)
   console.log(runFun('git status'))
-  cd('..')
+  cd(temp1)
+  temp1 = null
 }
 //查询主模块状态
 function mainStatusFun(){
