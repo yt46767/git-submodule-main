@@ -157,11 +157,10 @@ function addCommitPushSubFun(){
     runFun('git push origin '+args.subBranch)
     cd(temp1)
     temp1 = null
+  }else{
     runFun('git add '+args.subModule_folderName)
     runFun('git commit -m "git commit '+args.subModule_folderName+'"')
     runFun('git push origin '+args.mainBranch)
-  }else{
-    console.error('报错：请 git add 具体文件')
   }
 }
 //子模块提交 & 主模块提交子模块更新信息
