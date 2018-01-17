@@ -104,8 +104,11 @@ function pullAllFun(){
 function pullSubFun(){
   runFun('git submodule init')
   runFun("git submodule update "+subModule_folderName)
+  console.log("git submodule update "+subModule_folderName)
   cd(subModule_folderName)
+  console.log('cd '+subModule_folderName)
   runFun('git pull origin '+subBranch)
+  console.log('git pull origin '+subBranch)
   cd('..')
   // runFun('git pull origin '+mainBranch)
 }
@@ -132,6 +135,24 @@ function addCommitPushSubFun(){
   runFun('git add '+subModule_folderName)
   runFun('git commit -m "git commit '+subModule_folderName+'"')
   runFun('git push origin '+mainBranch)
+}
+//子模块提交 & 主模块提交子模块更新信息
+function rmCommitPushSubFun(){
+  if(addFiles != '未申明提交文件' && addFiles != '.'){
+    cd(subModule_folderName)
+    runFun('git pull origin '+subBranch)
+    let temp = addFiles.split(',').join(' ')
+    runFun('git rm '+ temp)
+    temp = null
+    runFun('git commit -m "git commit '+addFiles+'"')
+    runFun('git push origin '+subBranch)
+    cd('..')
+    runFun('git add '+subModule_folderName)
+    runFun('git commit -m "git commit '+subModule_folderName+'"')
+    runFun('git push origin '+mainBranch)
+  }else{
+    console.error('报错：请git rm 具体文件')
+  }
 }
 //查询子模块状态
 function subStatusFun(){
@@ -163,6 +184,9 @@ function mainStatusFun(){
       break
     case 'addcommitpushsub': //例如：h5m addcommitpushsub temp temp - subProject99
       addCommitPushSubFun()
+      break
+    case 'rmcommitpushsub':  //例如：h5m rmcommitpushsub temp temp - subProject99
+      rmCommitPushSubFun()
       break
     case 'mainstatus':       //例如：h5m mainstatus
       mainStatusFun()        //已验证通过！
